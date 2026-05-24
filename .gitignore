@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Virtual envs
+.venv/
+venv/
+.python-version
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# DepthAI runtime
+.cache/
+*.tar.gz
+
+# Scratch captures
+captures/
+*.png
+*.jpg
+*.mp4
+!docs/**/*.png
+!docs/**/*.jpg

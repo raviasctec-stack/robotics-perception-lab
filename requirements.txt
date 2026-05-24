@@ -1,0 +1,9 @@
+# Core OAK-D SDK
+depthai>=3.6,<4.0
+
+# Image processing & display
+opencv-python-headless>=4.9,<4.14
+numpy>=1.26,<3.0
+
+# Hand / pose tracking
+mediapipe>=0.10,<0.11
