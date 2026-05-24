@@ -20,6 +20,9 @@ venv/
 .cache/
 *.tar.gz
 
+# Downloaded ML models (re-fetchable; keep repo small)
+models/
+
 # Scratch captures
 captures/
 *.png
