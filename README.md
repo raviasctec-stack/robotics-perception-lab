@@ -1,5 +1,7 @@
 # robotics-perception-lab
 
+![hand teleop pipeline](docs/robotics-image.png)
+
 A hands-on robotics perception lab built around a **Luxonis OAK-D** depth camera.
 Each experiment is self-contained inside `experiments/NN_name/` with its own
 README and runnable scripts — clone, install, point the camera at something,
@@ -53,13 +55,6 @@ More to come — see [Roadmap](#roadmap).
 ├── models/              Downloaded ML models (gitignored, re-fetchable)
 └── captures/            Scratch directory for recorded sessions (gitignored)
 ```
-
-## Roadmap
-
-- **02 — Live 3D point cloud** : turn the depth stream into a real-time XYZ point cloud viewable in the browser. Teaches stereo geometry and point clouds end-to-end.
-- **03 — On-device object detection + 3D position** : run a YOLO model on the MyriadX chip, look up depth at each detection's centroid, output 3D bounding boxes. The perception stack of any pick-and-place robot.
-- **04 — Visual servoing / follower** : closed-loop perception → control. Track an object, output steering+speed commands.
-- **05 — (when SO-101 arrives)** : add demonstration recording to experiment 01 in lerobot dataset format, then train an imitation policy.
 
 ## License
 

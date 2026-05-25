@@ -8,8 +8,7 @@ When/if a real SO-101 arm is added, the only thing that changes is the
 consumer of the final `(x, y, z, gripper)` stream. Everything upstream
 (camera, hand tracking, smoothing, retargeting) stays the same.
 
-![pipeline diagram](../../docs/01_pipeline.png)
-*(add a screenshot at `docs/01_pipeline.png` to embed it here)*
+![hand teleop pipeline](../../docs/robotics-image.png)
 
 ## Why this matters
 
