@@ -91,8 +91,15 @@ class _Handler(BaseHTTPRequestHandler):
         self.send_response(404); self.end_headers()
 
 
+class _ReusableServer(ThreadingHTTPServer):
+    # Allow rebinding the socket immediately after the previous session.
+    # Otherwise back-to-back recordings fail with "Address already in use"
+    # while the OS holds the port in TIME_WAIT.
+    allow_reuse_address = True
+
+
 def _start_live_server() -> ThreadingHTTPServer:
-    server = ThreadingHTTPServer((HOST, PORT), _Handler)
+    server = _ReusableServer((HOST, PORT), _Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     return server
 
@@ -388,6 +395,7 @@ def run_recording(duration_s: float, out_dir: Path, session_label: str = ""):
     detector.close()
     _stop.set()
     server.shutdown()
+    server.server_close()  # actually release the socket, not just stop the loop
 
     write_summary(csv_path, summary_path, frames_total,
                   time.time() - t0, intr)

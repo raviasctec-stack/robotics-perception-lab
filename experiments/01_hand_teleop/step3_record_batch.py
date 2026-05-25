@@ -85,10 +85,17 @@ def main():
                    help="seconds of countdown between sessions (default 10)")
     p.add_argument("--from-session", type=int, default=1,
                    help="resume from session N (1-indexed). Default 1.")
+    p.add_argument("--batch-dir", type=str, default=None,
+                   help="resume into an existing batch_* folder (under captures/).")
     args = p.parse_args()
 
-    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    batch_dir = REPO_ROOT / "captures" / f"batch_{stamp}"
+    if args.batch_dir:
+        batch_dir = REPO_ROOT / "captures" / args.batch_dir
+        if not batch_dir.is_dir():
+            raise SystemExit(f"--batch-dir not found: {batch_dir}")
+    else:
+        stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        batch_dir = REPO_ROOT / "captures" / f"batch_{stamp}"
     batch_dir.mkdir(parents=True, exist_ok=True)
     print(f"Batch output dir: {batch_dir}")
     print(f"  {len(DEFAULT_POSES)} sessions, {args.duration:.0f}s each, "
