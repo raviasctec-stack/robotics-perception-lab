@@ -1,13 +1,18 @@
 # robotics-perception-lab
 
-Hands-on experiments in robotics perception, built around a Luxonis OAK-D depth camera.
-Each experiment is self-contained inside `experiments/NN_name/` with its own README and
-runnable scripts.
+A hands-on robotics perception lab built around a **Luxonis OAK-D** depth camera.
+Each experiment is self-contained inside `experiments/NN_name/` with its own
+README and runnable scripts — clone, install, point the camera at something,
+and run.
 
 ## Hardware
 
-- **Camera:** Luxonis OAK-D (3 sensors: 12MP color IMX378, stereo pair OV9282 + OV9282, 9-DOF BNO086 IMU, on-device Movidius MyriadX inference)
-- **Host:** Mac mini (Apple Silicon). Most pipelines also work on Linux/Windows with the same code.
+| Component | What | Notes |
+|---|---|---|
+| Depth camera | Luxonis OAK-D (RVC2 / Movidius MyriadX) | 12MP color (IMX378), stereo pair (OV9282 + OV9282, 7.5 cm baseline), 9-DOF IMU (BNO086), on-device neural-network inference |
+| Host | Mac mini (Apple Silicon) | Most pipelines also work on Linux/Windows with the same code |
+
+No additional hardware required to run any current experiment.
 
 ## Install
 
@@ -21,25 +26,41 @@ pip install -r requirements.txt
 
 # 3. Plug in the OAK-D over USB and verify it enumerates
 python -c "import depthai as dai; print(dai.Device.getAllAvailableDevices())"
+
+# 4. Download the MediaPipe Hands model (only needed by experiment 01)
+mkdir -p models
+curl -L -o models/hand_landmarker.task \
+  https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task
 ```
 
 ## Experiments
 
-| # | Name | What it teaches |
-|---|------|-----------------|
-| 01 | [Hand teleoperation](experiments/01_hand_teleop/) | Stereo depth, 2D→3D unprojection, hand tracking with MediaPipe, frame retargeting — the perception side of a teleoperated robot arm. |
+| # | Name | Status | What it teaches |
+|---|------|--------|-----------------|
+| 01 | [Hand teleoperation (perception side)](experiments/01_hand_teleop/) | ✅ complete | Stereo depth tuning, 2D→3D unprojection with the pinhole model, MediaPipe hand tracking, EMA smoothing, frame transforms, workspace mapping, scale-invariant gripper command, live 3D viewer over SSE+three.js |
 
-More to come. Each experiment is independent — you can clone the repo and run any one of them without touching the others.
+More to come — see [Roadmap](#roadmap).
 
 ## Repository layout
 
 ```
 .
-├── shared/              Reusable helpers (OAK pipeline setup, common math)
+├── shared/              Reusable helpers
+│   ├── oak.py             camera intrinsics + unproject(u,v,depth) -> XYZ
+│   ├── smoothing.py       EmaFilter with dropout handling
+│   └── retarget.py        palm-center + pinch + frame-transform + workspace map
 ├── experiments/NN_name/ One self-contained experiment per folder
-└── captures/            Scratch directory for output images / videos (gitignored)
+├── models/              Downloaded ML models (gitignored, re-fetchable)
+└── captures/            Scratch directory for recorded sessions (gitignored)
 ```
+
+## Roadmap
+
+- **02 — Live 3D point cloud** : turn the depth stream into a real-time XYZ point cloud viewable in the browser. Teaches stereo geometry and point clouds end-to-end.
+- **03 — On-device object detection + 3D position** : run a YOLO model on the MyriadX chip, look up depth at each detection's centroid, output 3D bounding boxes. The perception stack of any pick-and-place robot.
+- **04 — Visual servoing / follower** : closed-loop perception → control. Track an object, output steering+speed commands.
+- **05 — (when SO-101 arrives)** : add demonstration recording to experiment 01 in lerobot dataset format, then train an imitation policy.
 
 ## License
 
-MIT.
+MIT — see [LICENSE](LICENSE).
